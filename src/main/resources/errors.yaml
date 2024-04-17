@@ -1,0 +1,6 @@
+functionals:
+  notfound:
+    name: "NOT_FOUND"
+    code: "ERREUR_FONCTIONNELLE_001"
+    message: "Non trouvé"
+    informations: "Le contenu recherché n'apas été trouvé"
