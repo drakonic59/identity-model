@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "security.headers.authorization",
+  "type": "java.lang.String",
+  "description": "Header requis lors de n'importe quel appel."
+}]}

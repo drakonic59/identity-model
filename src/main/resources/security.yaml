@@ -1,0 +1,8 @@
+groups:
+ - name: ""
+   description: ""
+   level: 0
+   authorizedActionGroups:
+    - health
+   authorizedActions:
+    - ping
