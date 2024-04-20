@@ -1,8 +1,46 @@
 groups:
- - name: ""
-   description: ""
+ - name: "Inspecteur"
+   description: "Groupe destiné aux applications n'ayant pas besoin de plus que les informations de 'vie'."
    level: 0
    authorizedActionGroups:
     - health
    authorizedActions:
     - ping
+ - name: "Application"
+   description: "Groupe destiné aux applications ayant le droit de générer un token après une authentification basique."
+   level: 1
+   authorizedActionGroups:
+    - health
+    - basic
+    - bearer
+   authorizedActions:
+    - ping
+    - verify
+    - login
+    - validity
+ - name: "Authentificateur"
+   description: "Groupe destiné aux applications nécessitant l'authentification d'une application avant de lui offrir ses services."
+   level: 10
+   authorizedActionGroups:
+    - health
+    - basic
+   authorizedActions:
+    - ping
+    - authorize
+ - name: "Administrateur"
+   description: "Groupe destiné aux humains ou applications ayant droit de gestion (ajout de comptes par exempe)."
+   level: 20
+   authorizedActionGroups:
+    - health
+    - basic
+    - bearer
+    - admin
+   authorizedActions:
+    - ping
+    - verify
+    - login
+    - authorize
+    - validity
+    - groups
+    - authorize
+    - informations

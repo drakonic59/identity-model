@@ -3,6 +3,7 @@ package fr.hattane.ilias.identitymodel.config.files.errors;
 public abstract class Error {
 	
 	public static final byte TYPE_FUNCTIONAL = 0;
+	public static final byte TYPE_TECHNICAL = 1;
 	
 	private byte type;
 	

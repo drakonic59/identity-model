@@ -10,13 +10,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.stereotype.Component;
 
-import fr.hattane.ilias.identitymodel.config.security.types.BasicToken;
+import fr.hattane.ilias.identitymodel.config.security.types.BearerToken;
 import fr.hattane.ilias.identitymodel.services.IAuthorizationService;
 import fr.hattane.ilias.identitymodel.services.ILoggerService;
 import fr.hattane.ilias.identitymodel.services.ITokenService;
 
 @Component
-public class BasicAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
+public class BearerAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
     
 	@Value( "${server.servlet.context-path}" )
 	private String contextPath;
@@ -36,10 +36,10 @@ public class BasicAuthorizationManager implements AuthorizationManager<RequestAu
 	@Override
 	public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
 		
-		logs.info("SECURITY", "Tentative de connexion : " + context.getRequest().getRequestURI() + " (" + context.getRequest().getRemoteAddr() + ")");
+		logs.info("SECURITY", "Tentative de connexion Bearer : " + context.getRequest().getRequestURI() + " (" + context.getRequest().getRemoteAddr() + ")");
 		
-		BasicToken token;
-		if ( ( token = tokens.getBasicToken(
+		BearerToken token;
+		if ( ( token = tokens.getBearerToken(
 								context.getRequest().getHeader(authorizationHeader)
 							)) == null ) {
 			
@@ -53,9 +53,9 @@ public class BasicAuthorizationManager implements AuthorizationManager<RequestAu
 													.substring(1)
 														.split("/");
 
-		logs.info("SECURITY", "-> Succès : Requête du client '" + token.getClientId() + "'.");
+		logs.info("SECURITY", "-> Succès : Requête du client '" + token.getIdentity().getClientId() + "'.");
 		
-		return new AuthorizationDecision(authorizations.isAuthorized(token, paths));
+		return new AuthorizationDecision(authorizations.isAuthorized(token.getIdentity(), paths));
 		
 	}
 	

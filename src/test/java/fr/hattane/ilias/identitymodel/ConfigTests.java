@@ -17,7 +17,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import fr.hattane.ilias.identitymodel.config.files.ErrorsConfig;
 import fr.hattane.ilias.identitymodel.config.files.SecurityConfig;
 import fr.hattane.ilias.identitymodel.config.files.errors.Errors;
-import fr.hattane.ilias.identitymodel.config.files.errors.FunctionalError;
+import fr.hattane.ilias.identitymodel.config.files.errors.SimpleError;
 import fr.hattane.ilias.identitymodel.config.files.security.Group;
 
 @SpringBootTest
@@ -28,6 +28,28 @@ class ConfigTests {
 
 	@Autowired 
 	private SecurityConfig securityConfig;
+
+	@Autowired 
+	private ErrorsConfig errorsConfig;
+	
+	@Test
+	void testErrorsBean() {
+		
+	    assertNotNull(errorsConfig);
+	    assertNotNull(errorsConfig.getTechnicals());
+	    assertFalse(errorsConfig.getTechnicals().isEmpty());
+	    
+	    SimpleError notAuthorized = errorsConfig.getTechnicals().get(Errors.NOT_AUTHORIZED.getName());
+	    
+	    assertNotNull(notAuthorized);
+	    assertEquals(Errors.NOT_AUTHORIZED.name(), notAuthorized.getName());
+
+	    SimpleError empty = errorsConfig.getFunctionals().get(Errors.EMPTY_RESULT.getName());
+	    
+	    assertNotNull(empty);
+	    assertEquals(Errors.EMPTY_RESULT.name(), empty.getName());
+	    
+	}
 	
 	@Test
 	void testErrors() {
@@ -40,13 +62,18 @@ class ConfigTests {
 		    ErrorsConfig errors = yaml.load(inputStream);
 		    
 		    assertNotNull(errors);
-		    assertNotNull(errors.getFunctionals());
-		    assertFalse(errors.getFunctionals().isEmpty());
+		    assertNotNull(errors.getTechnicals());
+		    assertFalse(errors.getTechnicals().isEmpty());
 		    
-		    FunctionalError notfound = errors.getFunctionals().get(Errors.NOT_FOUND.getName());
+		    SimpleError notAuthorized = errors.getTechnicals().get(Errors.NOT_AUTHORIZED.getName());
 		    
-		    assertNotNull(notfound);
-		    assertEquals(Errors.NOT_FOUND.name(), notfound.getName());
+		    assertNotNull(notAuthorized);
+		    assertEquals(Errors.NOT_AUTHORIZED.name(), notAuthorized.getName());
+		    
+		    SimpleError empty = errors.getFunctionals().get(Errors.EMPTY_RESULT.getName());
+		    
+		    assertNotNull(empty);
+		    assertEquals(Errors.EMPTY_RESULT.name(), empty.getName());
 		    
 	    } catch (Exception e) { 
 	    	
@@ -58,7 +85,7 @@ class ConfigTests {
 	}
 	
 	@Test
-	void testSecurity() {
+	void testSecurityBean() {
 		    
 	    assertNotNull(securityConfig);
 	    assertNotNull(securityConfig.getGroups());
@@ -84,7 +111,7 @@ class ConfigTests {
 	}
 	
 	@Test
-	void testSecurityBean() {
+	void testSecurity() {
 		
 		Yaml yaml = new Yaml(new Constructor(SecurityConfig.class, new LoaderOptions()));
 	    

@@ -18,17 +18,23 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 public class ApplicationSecurityConfig {
 	
 	@Autowired
-	BasicAuthorizationManager auth;
+	BasicAuthorizationManager baiscAuth;
+
+	@Autowired
+	BearerAuthorizationManager bearerAuth;
 	
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	    http.csrf(AbstractHttpConfigurer::disable)
 	    	.httpBasic(AbstractHttpConfigurer::disable)
 	    	.sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 	    	.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
 	              authorizationManagerRequestMatcherRegistry
+		                .requestMatchers("/swagger-ui/**").permitAll()
+		                .requestMatchers("/definition-docs/**").permitAll()
 		                .requestMatchers("/actuator/**").permitAll()
-              			.anyRequest().access(auth)
+		                .requestMatchers("/bearer/**").access(bearerAuth)
+              			.anyRequest().access(baiscAuth)
                   )
 	    	.exceptionHandling(handle -> handle
 	    			.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
@@ -38,7 +44,7 @@ public class ApplicationSecurityConfig {
 	}
 	
 	@Bean
-	public UserDetailsService userDetailsService() {
+	UserDetailsService userDetailsService() {
 	    return new InMemoryUserDetailsManager();
 	}
 	

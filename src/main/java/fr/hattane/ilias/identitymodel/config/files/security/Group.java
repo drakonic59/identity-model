@@ -12,10 +12,6 @@ public class Group {
 	private ArrayList<String> authorizedActionGroups;
 	private ArrayList<String> authorizedActions;
 
-	public Group() {
-		super();
-	}
-
 	public String getName() {
 		return name;
 	}

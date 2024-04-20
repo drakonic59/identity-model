@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
@@ -22,9 +25,14 @@ public class OpenAPIConfig {
 	
 	@Value( "${server.servlet.context-path}" )
 	private String contextPath;
+
 	
 	@Bean
 	public OpenAPI myOpenAPI() {
+
+		String schemeName = "Token Basic";
+		String bearerFormat = "Basic";
+		String scheme = "Basic";
 		
 		Server devServer = new Server();
 		devServer.setUrl("http://localhost:" + apiPort + contextPath);
@@ -47,7 +55,19 @@ public class OpenAPIConfig {
 					.description("Application JAVA Spring Boot offrant des fonctionnalités liées à la sécurité des utilisateurs, et à la protection d'autres applications dans le cadre de leur utilisation.")
 					.license(license);
 
-		return new OpenAPI().info(info).servers(List.of(devServer, prodServer));
+		return new OpenAPI().info(info)
+						.servers(List.of(devServer, prodServer))
+							.addSecurityItem(new SecurityRequirement()
+									.addList(schemeName)).components(new Components()
+			                                  .addSecuritySchemes(
+			                                        schemeName, new SecurityScheme()
+			                                        .name(schemeName)
+			                                        .type(SecurityScheme.Type.HTTP)
+			                                        .bearerFormat(bearerFormat)
+			                                        .in(SecurityScheme.In.HEADER)
+			                                        .scheme(scheme)
+			                                  )
+			                  );
 	
 	}
 }

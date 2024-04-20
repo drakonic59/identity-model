@@ -6,26 +6,31 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fr.hattane.ilias.identitymodel.config.files.SecurityConfig;
 import fr.hattane.ilias.identitymodel.config.files.security.Group;
 import fr.hattane.ilias.identitymodel.config.security.types.BasicToken;
 import fr.hattane.ilias.identitymodel.services.IAuthorizationService;
+import fr.hattane.ilias.identitymodel.services.ILoggerService;
+import fr.hattane.ilias.identitymodel.services.models.IClientService;
 
 @Service
 public class AuthorizationService implements IAuthorizationService {
-
+	
 	@Autowired 
-	private SecurityConfig securityConfig;
+	private IClientService clients;
+	
+	@Autowired 
+	private ILoggerService logger;
 	
 	@Override
 	public boolean isAuthorized(BasicToken token, String[] actions) {
 		
-		Group group = securityConfig.getGroups().get(0);
+		Group group = clients.getClientGroup(token.getClientId(), token.getClientSecret());
+		if (group == null)
+			return false;
 		
 		try {
-			System.out.println((new ObjectMapper()).writeValueAsString(group));
+			logger.info("SECURITY", "-> Groupe détecté : " + (new ObjectMapper()).writeValueAsString(group));
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

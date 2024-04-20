@@ -2,7 +2,8 @@ package fr.hattane.ilias.identitymodel.config.files.errors;
 
 public enum Errors {
 	
-	NOT_FOUND("notfound", Error.TYPE_FUNCTIONAL);
+	NOT_AUTHORIZED("not_authorized", Error.TYPE_TECHNICAL),
+	EMPTY_RESULT("empty", Error.TYPE_FUNCTIONAL);
 	
 	private String name;
 

@@ -1,6 +1,16 @@
+technicals:
+  not_authorized:
+    codeReturned: -1
+    returnCode: 403
+    name: "NOT_AUTHORIZED"
+    code: "ERREUR_TECHNIQUE_001"
+    message: "Non autorisé"
+    informations: "La demande d'autorisation a été refusée. Client inconnu, format incorrect ou secret incorrect."
 functionals:
-  notfound:
-    name: "NOT_FOUND"
-    code: "ERREUR_FONCTIONNELLE_001"
-    message: "Non trouvé"
-    informations: "Le contenu recherché n'apas été trouvé"
+  empty:
+    codeReturned: -1
+    returnCode: 404
+    name: "EMPTY_RESULT"
+    code: "ERREUR_FONCTIONNELLE_002"
+    message: "Aucun résultat à afficher"
+    informations: "Il semble que les données demandées n'exitent pas."
